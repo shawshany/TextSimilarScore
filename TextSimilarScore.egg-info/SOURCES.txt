@@ -1,0 +1,9 @@
+README.md
+setup.py
+TextSimilarScore/__init__.py
+TextSimilarScore.egg-info/PKG-INFO
+TextSimilarScore.egg-info/SOURCES.txt
+TextSimilarScore.egg-info/dependency_links.txt
+TextSimilarScore.egg-info/top_level.txt
+TextSimilarScore/tools/TextSim.py
+TextSimilarScore/tools/__init__.py
