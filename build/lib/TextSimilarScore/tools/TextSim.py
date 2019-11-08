@@ -1,40 +1,30 @@
-#!/usr/bin/python3
-# -*-coding:utf-8 -*-
-#Reference:**********************************************
-# @Time     : 2019-09-12 14:04
-# @Author   : 病虎
-# @E-mail   : victor.xsyang@gmail.com
-# @File     : TextSim.py
-# @User     : ora
-# @Software: PyCharm
-#Reference:**********************************************
+# utf-8
 import jieba
 import jieba.posseg as pseg
 from jieba import analyse
 import numpy as np
+from keras.preprocessing.sequence import pad_sequences
 
 
 class TextSimilarity(object):
 
-    def __init__(self, str_a, str_b):
+    def __init__(self):
         '''
         初始化类行
         '''
-        self.str_a = str_a
-        self.str_b = str_b
 
     # get LCS(longest common subsquence),DP
-    def lcs(self):
+    def lcs(self, str_a,str_b):
         biggest = 0
-        if self.str_a is '' or self.str_b is '':
+        if str_a is '' or str_b is '':
             return 0.0
-        lensum = float(len(self.str_a) + len(self.str_b))
+        lensum = float(len(str_a) + len(str_b))
         # 得到一个二维的数组，类似用dp[lena+1][lenb+1],并且初始化为0
-        lengths = [[0 for j in range(len(self.str_b) + 1)] for i in range(len(self.str_a) + 1)]
+        lengths = [[0 for j in range(len(str_b) + 1)] for i in range(len(str_a) + 1)]
 
         # enumerate(a)函数： 得到下标i和a[i]
-        for i, x in enumerate(self.str_a):
-            for j, y in enumerate(self.str_b):
+        for i, x in enumerate(str_a):
+            for j, y in enumerate(str_b):
                 if x == y:
                     lengths[i + 1][j + 1] = lengths[i][j] + 1
                     if lengths[i + 1][j + 1] > biggest:
@@ -42,17 +32,16 @@ class TextSimilarity(object):
                 else:
                     lengths[i + 1][j + 1] = 0
         longestdist = biggest
-        ratio = longestdist / min(len(self.str_a), len(self.str_b))
+        ratio = longestdist / min(len(str_a), len(str_b))
         return ratio
 
-    def minimumEditDistance(self):
+    def minimumEditDistance(self, str_a, str_b):
         '''
         最小编辑距离，只有三种操作方式 替换、插入、删除
         '''
-        lensum = float(len(self.str_a) + len(self.str_b))
-        str_a, str_b = self.str_a, self.str_b
-        if len(self.str_a) > len(self.str_b):  # 得到最短长度的字符串
-            str_a, str_b = self.str_b, self.str_a
+        lensum = float(len(str_a) + len(str_b))
+        if len(str_a) > len(str_b):  # 得到最短长度的字符串
+            str_a, str_b = str_b, str_a
         distances = range(len(str_a) + 1)  # 设置默认值
         for index2, char2 in enumerate(str_b):  # str_b > str_a
             newDistances = [index2 + 1]  # 设置新的距离，用来标记
@@ -70,12 +59,10 @@ class TextSimilarity(object):
         # return {'distance':mindist, 'ratio':ratio}
         return ratio
 
-    def levenshteinDistance(self):
+    def levenshteinDistance(self, str1, str2):
         '''
         编辑距离——莱文斯坦距离,计算文本的相似度
         '''
-        str1 = self.str_a
-        str2 = self.str_b
         m = len(str1)
         n = len(str2)
         lensum = float(m + n)
@@ -112,13 +99,11 @@ class TextSimilarity(object):
 
         return [cuta, seta]
 
-    def JaccardSim(self):
+    def JaccardSim(self, str_a, str_b):
         '''
         Jaccard相似性系数
         计算sa和sb的相似度 len（sa & sb）/ len（sa | sb）
         '''
-        str_a = self.str_a
-        str_b = self.str_b
         seta = self.splitWords(str_a)[1]
         setb = self.splitWords(str_b)[1]
 
@@ -136,9 +121,8 @@ class TextSimilarity(object):
         cipin = {}  # 统计分词后的词频
 
         fenci = jieba.cut(text)
-
         # 记录每个词频的频率
-        for word in fenci:
+        for word in list(fenci):
             if word not in cipin.keys():
                 cipin[word] = 0
             cipin[word] += 1
@@ -153,7 +137,6 @@ class TextSimilarity(object):
         for keyword in keywords:
             # print(keyword ," ",cipin[keyword[0]])
             ans.append(cipin[keyword[0]])  # 得到前topk频繁词项的词频
-
         return ans
 
     def cos_sim(self, a, b):
@@ -182,15 +165,17 @@ class TextSimilarity(object):
         # return {"文本的皮尔森相似度:":np.sum(a*b) / (np.sqrt(np.sum(a ** 2)) * np.sqrt(np.sum(b ** 2)))}
         return np.sum(a * b) / (np.sqrt(np.sum(a ** 2)) * np.sqrt(np.sum(b ** 2)))
 
-    def splitWordSimlaryty(self, topK=20):
+    def splitWordSimlaryty(self, str_a, str_b, topK=10):
         '''
         基于分词求相似度，默认使用cos_sim 余弦相似度,默认使用前20个最频繁词项进行计算
         '''
         # 得到前topK个最频繁词项的字频向量
-        str_a = self.str_a
-        str_b = self.str_b
         vec_a = self.countIDF(str_a, topK)
         vec_b = self.countIDF(str_b, topK)
+        if (len(vec_b) < len(vec_a)):
+            vec_b += [0 for i in range(len(vec_a) - len(vec_b))]
+        else:
+            vec_a += [0 for i in range(len(vec_b) - len(vec_a))]
         return self.cos_sim(vec_a, vec_b)
 
     def string_hash(self, source):  # 局部哈希算法的实现

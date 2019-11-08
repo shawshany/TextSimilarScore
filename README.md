@@ -12,13 +12,13 @@ compute similar scores of two strings
 # 使用方法
 ```
 import TextSimilarScore.tools.TextSim as ts
-test = ts.TextSimilarity('中移在线全链路智能化系统研发项目', '中移在线全国智能路由决策项目')
+test = ts.TextSimilarity()
 # 计算连续最长公共子串的距离
-print(test.lcs())
+print(test.lcs('中移在线全链路智能化系统研发项目', '中移在线全国智能路由决策项目'))
 # 计算编辑距离
-print(test.minimumEditDistance())
+print(test.minimumEditDistance('中移在线全链路智能化系统研发项目', '中移在线全国智能路由决策项目'))
 # 基于tf-idf计算距离
-print(test.splitWordSimlaryty())
+print(test.splitWordSimlaryty('中移在线全链路智能化系统研发项目', '中移在线全国智能路由决策项目'))
 # 计算JaccardSim系数
-print(test.JaccardSim())
+print(test.JaccardSim('中移在线全链路智能化系统研发项目', '中移在线全国智能路由决策项目'))
 ```
