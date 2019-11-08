@@ -50,6 +50,7 @@ class TextSimilarity(object):
         最小编辑距离，只有三种操作方式 替换、插入、删除
         '''
         lensum = float(len(self.str_a) + len(self.str_b))
+        str_a, str_b = self.str_a, self.str_b
         if len(self.str_a) > len(self.str_b):  # 得到最短长度的字符串
             str_a, str_b = self.str_b, self.str_a
         distances = range(len(str_a) + 1)  # 设置默认值
