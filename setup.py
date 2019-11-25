@@ -15,7 +15,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="TextSimilarScore",
-    version="0.0.3",
+    version="0.0.4",
     author="Ora",
     author_email="victor.xsyang@gmail.com",
     description="compute similar scores of two text",
