@@ -13,6 +13,38 @@ class TextSimilarity(object):
         初始化类行
         '''
 
+    def lcs_sequence(self, arg0, arg1):
+        str_a = arg0
+        str_b = arg1
+        if (str_a is None) or (str_b is None) or (len(str_a) <= 0) or (len(str_b) <= 0):
+            return 0.0
+        if (str_a is '') or (str_b is ''):
+            return 0.0
+        lensum = float(len(str_a) + len(str_b))
+        # 得到一个二维的数组，类似用dp[lena+1][lenb+1],并且初始化为0
+        lengths = [[0 for j in range(len(str_b) + 1)] for i in range(len(str_a) + 1)]
+
+        # enumerate(a)函数： 得到下标i和a[i]
+        for i, x in enumerate(str_a):
+            for j, y in enumerate(str_b):
+                if x == y:
+                    lengths[i + 1][j + 1] = lengths[i][j] + 1
+                else:
+                    lengths[i + 1][j + 1] = max(lengths[i + 1][j], lengths[i][j + 1])
+        x, y = len(str_a), len(str_b)
+        while x != 0 and y != 0:
+            # 证明最后一个字符肯定没有用到
+            if lengths[x][y] == lengths[x - 1][y]:
+                x -= 1
+            elif lengths[x][y] == lengths[x][y - 1]:
+                y -= 1
+            else:  # 用到的从后向前的当前一个字符
+                assert str_a[x - 1] == str_b[y - 1]  # 后面语句为真，类似于if(a[x-1]==b[y-1]),执行后条件下的语句
+                x -= 1
+                y -= 1
+        longestdist = lengths[len(str_a)][len(str_b)]
+        ratio = longestdist / min(len(str_a), len(str_b))
+        return ratio
     # get LCS(longest common subsquence),DP
     def lcs(self, str_a,str_b):
         biggest = 0

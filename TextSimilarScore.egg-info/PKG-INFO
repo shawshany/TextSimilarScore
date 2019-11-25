@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: TextSimilarScore
-Version: 0.0.4
+Version: 0.0.5
 Summary: compute similar scores of two text
 Home-page: https://github.com/shawshany/TextSimilarScore
 Author: Ora
@@ -14,6 +14,7 @@ Description: # [![Version][version-badge]][version-link] ![MIT License][license-
         `TextSimilarScore`这是个计算两个短文本相似度的算法
         
         # 安装方法
+        安装以来
         ```pip install TextSimilarScore```
         
         ```pip install -r resuirements.txt```
@@ -23,6 +24,8 @@ Description: # [![Version][version-badge]][version-link] ![MIT License][license-
         test = ts.TextSimilarity()
         # 计算连续最长公共子串的距离
         print(test.lcs('中移在线全链路智能化系统研发项目', '中移在线全国智能路由决策项目'))
+        # 计算连续最长公共子序列的距离
+        print(test.lcs_sequence('中移在线全链路智能化系统研发项目', '中移在线全国智能路由决策项目'))
         # 计算编辑距离
         print(test.minimumEditDistance('中移在线全链路智能化系统研发项目', '中移在线全国智能路由决策项目'))
         # 基于tf-idf计算距离
