@@ -6,6 +6,7 @@ compute similar scores of two strings
 `TextSimilarScore`这是个计算两个短文本相似度的算法
 
 # 安装方法
+安装以来
 ```pip install TextSimilarScore```
 
 ```pip install -r resuirements.txt```
